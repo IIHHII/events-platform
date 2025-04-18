@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/community-events-platform/static/css/main.f855e6bc.css",
+    "main.js": "/community-events-platform/static/js/main.b72864d7.js",
+    "static/js/488.e75445ad.chunk.js": "/community-events-platform/static/js/488.e75445ad.chunk.js",
+    "service-worker.js": "/community-events-platform/service-worker.js",
+    "static/media/logo.svg": "/community-events-platform/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
+    "index.html": "/community-events-platform/index.html",
+    "main.f855e6bc.css.map": "/community-events-platform/static/css/main.f855e6bc.css.map",
+    "main.b72864d7.js.map": "/community-events-platform/static/js/main.b72864d7.js.map",
+    "488.e75445ad.chunk.js.map": "/community-events-platform/static/js/488.e75445ad.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.b72864d7.js"
+  ]
+}
