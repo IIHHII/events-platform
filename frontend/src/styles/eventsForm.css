@@ -1,0 +1,21 @@
+.event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 400px;
+    margin-top: 20px;
+  }
+  
+  .event-form input {
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .event-form button {
+    padding: 10px;
+    border: 2px solid black;
+    background: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  

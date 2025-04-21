@@ -1,0 +1,35 @@
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .event-card {
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 6px;
+    justify-content: space-between;
+  }
+  
+  .event-image {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(#ddd, #ccc);
+    border: 1px solid #888;
+    margin-right: 16px;
+  }
+  
+  .event-info {
+    flex-grow: 1;
+  }
+  
+  .sign-up-btn {
+    border: 2px solid black;
+    background: white;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
