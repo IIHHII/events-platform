@@ -5,7 +5,6 @@ import '../styles/eventsForm.css';
 const AddEventPage = () => {
   return (
     <>
-      <h2>Add a New Event</h2>
       <EventForm />
     </>
   );
