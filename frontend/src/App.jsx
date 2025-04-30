@@ -8,7 +8,7 @@ const App = () => {
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Link to="/add-event" style={{ border: '1px solid #000', padding: '8px 12px', borderRadius: '6px', textDecoration: 'none' }}>Staff Sign In</Link>
+        <Link to="/add-event" style={{ border: '1px solid #000', padding: '8px 12px', borderRadius: '6px', textDecoration: 'none' }}>Sign In</Link>
       </div>
       <Routes>
         <Route path="/events" element={<EventsPage />} />
@@ -20,3 +20,5 @@ const App = () => {
 };
 
 export default App;
+
+
