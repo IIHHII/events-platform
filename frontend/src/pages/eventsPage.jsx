@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Header from '../components/header';
 import EventsList from '../components/eventsList';
-import '../styles/eventsList.css';
+import LoginForm from '../components/loginForm';
 
 const EventsPage = () => {
+  const [showLogin, setShowLogin] = useState(false);
+
+  const handleSignInClick = () => {
+    setShowLogin(true);
+  };
+
   return (
     <>
-      <h2>Upcoming Events</h2>
-      <EventsList />
+      <Header onSignInClick={handleSignInClick} />
+      {showLogin ? <LoginForm onLoginSuccess={() => setShowLogin(false)} /> : (
+        <>
+          <h2>Upcoming Events</h2>
+          <EventsList />
+        </>
+      )}
     </>
   );
 };
