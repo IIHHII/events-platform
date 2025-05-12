@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/header';
 import EventsList from '../components/eventsList';
 import LoginForm from '../components/loginForm';
 
-const EventsPage = () => {
+const EventsPage = ({ isLoggedIn, onLoginSuccess }) => {
   const [showLogin, setShowLogin] = useState(false);
+  const navigate = useNavigate();
+
+  if (isLoggedIn) {
+    navigate('/add-event');
+    return null;
+  }
 
   const handleSignInClick = () => {
     setShowLogin(true);
@@ -13,7 +20,9 @@ const EventsPage = () => {
   return (
     <>
       <Header onSignInClick={handleSignInClick} />
-      {showLogin ? <LoginForm onLoginSuccess={() => setShowLogin(false)} /> : (
+      {showLogin ? (
+        <LoginForm onLoginSuccess={onLoginSuccess} />
+      ) : (
         <>
           <h2>Upcoming Events</h2>
           <EventsList />

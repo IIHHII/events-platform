@@ -2,12 +2,13 @@ import React from 'react';
 import EventForm from '../components/eventsForm';
 import '../styles/eventsForm.css';
 
-const AddEventPage = () => {
+const AddEventPage = ({ isLoggedIn }) => {
   return (
     <>
-      <EventForm />
+      {isLoggedIn ? <EventForm /> : <p>Please sign in to add events.</p>}
     </>
   );
 };
+
 
 export default AddEventPage;

@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
-import LoginForm from './loginForm';
 import '../styles/eventsForm.css';
 
 const EventForm = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [title, setTitle] = useState('');
   const [dateTime, setDateTime] = useState('');
-
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,10 +11,6 @@ const EventForm = () => {
     setTitle('');
     setDateTime('');
   };
-
-  if (!isLoggedIn) {
-    return <LoginForm onLoginSuccess={handleLoginSuccess} />;
-  }
 
   return (
     <>
