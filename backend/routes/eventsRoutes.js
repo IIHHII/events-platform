@@ -1,8 +1,16 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { getEvents, createEvent } = require("../controllers/eventsController");
+const {
+  getEvents,
+  createEvent,
+  updateEvent,
+  deleteEvent
+} = require('../controllers/eventsController');
 
-router.get("/", getEvents);
-router.post("/", createEvent);
+// Base path: /api/events
+router.get('/', getEvents);
+router.post('/', createEvent);
+router.put('/:id', updateEvent);
+router.delete('/:id', deleteEvent);
 
 module.exports = router;

@@ -1,13 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/eventsList.css';
+import { deleteEvent } from '../api/events';
 
 const EventsPage = ({ events, setEvents, isLoggedIn }) => {
   const navigate = useNavigate();
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Delete this event?')) {
-      setEvents(events.filter(e => e.id !== id));
+      try {
+        await deleteEvent(id);
+        setEvents(events.filter(e => e.id !== id));
+      } catch (error) {
+        alert('Failed to delete event: ' + error.message);
+      }
     }
   };
 
@@ -35,12 +41,8 @@ const EventsPage = ({ events, setEvents, isLoggedIn }) => {
         </div>
       ))}
 
-
       {isLoggedIn && (
-        <button
-          className="add-event-button"
-          onClick={() => navigate('/add-event')}
-        >
+        <button className="add-event-button" onClick={() => navigate('/add-event')}>
           + Add Event
         </button>
       )}

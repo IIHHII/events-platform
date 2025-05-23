@@ -1,22 +1,26 @@
-import React from 'react';
-import events from '../data/events';
-import '../styles/eventsList.css';
+// src/components/EventsList.jsx
+import React, { useEffect, useState } from 'react';
+import { getEvents } from '../api/events';
 
-const EventsList = () => {
+function EventsList() {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    getEvents().then(setEvents).catch(console.error);
+  }, []);
+
   return (
-    <div className="events-list">
-      {events.map((event, index) => (
-        <div className="event-card" key={index}>
-          <div className="event-image" />
-          <div className="event-info">
-            <h3>{event.title}</h3>
-            <p>{event.dateTime}</p>
-          </div>
-          <button className="sign-up-btn">Sign Up</button>
-        </div>
-      ))}
+    <div>
+      <h2>All Events</h2>
+      <ul>
+        {events.map(event => (
+          <li key={event.id}>
+            <strong>{event.title}</strong> – {event.dateTime} @ {event.location}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
+}
 
 export default EventsList;
