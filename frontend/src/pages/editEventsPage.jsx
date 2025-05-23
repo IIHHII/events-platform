@@ -1,26 +1,41 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/eventsForm.css';
 
-const AddEventPage = ({ events, setEvents }) => {
+const EditEventPage = ({ events, setEvents }) => {
+  const { id } = useParams();
+  const nav = useNavigate();
+  const existing = events.find(e => e.id === +id);
+
   const [title, setTitle] = useState('');
   const [dateTime, setDateTime] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
-  const nav = useNavigate();
+
+  useEffect(() => {
+    if (!existing) {
+      nav('/');
+    } else {
+      setTitle(existing.title);
+      setDateTime(existing.dateTime);
+      setLocation(existing.location);
+      setDescription(existing.description);
+    }
+  }, [existing, nav]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setEvents([
-      ...events,
-      { id: Date.now(), title, dateTime, location, description }
-    ]);
+    setEvents(events.map(e =>
+      e.id === +id
+        ? { ...e, title, dateTime, location, description }
+        : e
+    ));
     nav('/');
   };
 
   return (
     <div className="form-container">
-      <h2>Add New Event</h2>
+      <h2>Edit Event</h2>
       <form className="event-form" onSubmit={handleSubmit}>
         <input
           type="text" placeholder="Title" value={title}
@@ -38,10 +53,10 @@ const AddEventPage = ({ events, setEvents }) => {
           placeholder="Description" value={description}
           onChange={e => setDescription(e.target.value)} required
         />
-        <button type="submit">Add Event</button>
+        <button type="submit">Save Changes</button>
       </form>
     </div>
   );
 };
 
-export default AddEventPage;
+export default EditEventPage;

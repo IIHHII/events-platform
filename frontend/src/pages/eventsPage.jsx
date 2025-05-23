@@ -1,34 +1,50 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/header';
-import EventsList from '../components/eventsList';
-import LoginForm from '../components/loginForm';
+import '../styles/eventsList.css';
 
-const EventsPage = ({ isLoggedIn, onLoginSuccess }) => {
-  const [showLogin, setShowLogin] = useState(false);
+const EventsPage = ({ events, setEvents, isLoggedIn }) => {
   const navigate = useNavigate();
 
-  if (isLoggedIn) {
-    navigate('/add-event');
-    return null;
-  }
-
-  const handleSignInClick = () => {
-    setShowLogin(true);
+  const handleDelete = (id) => {
+    if (window.confirm('Delete this event?')) {
+      setEvents(events.filter(e => e.id !== id));
+    }
   };
 
   return (
-    <>
-      <Header onSignInClick={handleSignInClick} />
-      {showLogin ? (
-        <LoginForm onLoginSuccess={onLoginSuccess} />
-      ) : (
-        <>
-          <h2>Upcoming Events</h2>
-          <EventsList />
-        </>
+    <div className="events-page">
+      <h2>Upcoming Events</h2>
+
+      {events.map(event => (
+        <div className="event-card" key={event.id}>
+          <h3>{event.title}</h3>
+          <p><strong>Date:</strong> {event.dateTime}</p>
+          <p><strong>Location:</strong> {event.location}</p>
+          <p>{event.description}</p>
+
+          {isLoggedIn ? (
+            <div className="event-card-actions">
+              <button onClick={() => navigate(`/edit-event/${event.id}`)}>Edit</button>
+              <button onClick={() => handleDelete(event.id)}>Delete</button>
+            </div>
+          ) : (
+            <div className="event-card-actions">
+              <button className="sign-up-btn">Sign Up</button>
+            </div>
+          )}
+        </div>
+      ))}
+
+
+      {isLoggedIn && (
+        <button
+          className="add-event-button"
+          onClick={() => navigate('/add-event')}
+        >
+          + Add Event
+        </button>
       )}
-    </>
+    </div>
   );
 };
 
