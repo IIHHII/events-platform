@@ -42,7 +42,10 @@ const EventsPage = ({ events, setEvents, isLoggedIn }) => {
       ))}
 
       {isLoggedIn && (
-        <button className="add-event-button" onClick={() => navigate('/add-event')}>
+        <button
+          className="add-event-button"
+          onClick={() => navigate('/add-event')}
+        >
           + Add Event
         </button>
       )}
@@ -51,3 +54,4 @@ const EventsPage = ({ events, setEvents, isLoggedIn }) => {
 };
 
 export default EventsPage;
+

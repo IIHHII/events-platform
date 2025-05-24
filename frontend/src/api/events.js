@@ -28,8 +28,8 @@ export async function updateEvent(id, event) {
 
 export async function deleteEvent(id) {
   const res = await fetch(`${BASE_URL}/${id}`, {
-    method: 'DELETE',
+    method: 'DELETE'
   });
   if (!res.ok) throw new Error('Failed to delete event');
-  return res.json();
+  return true;
 }
