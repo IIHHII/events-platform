@@ -1,9 +1,11 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../styles/header.css';
 
-const Header = ({ isLoggedIn, onLogout }) => {
-  const navigate = useNavigate();
+const Header = ({ isLoggedIn }) => {
+  const handleLogout = () => {
+    window.location.href = 'http://localhost:5000/auth/logout';
+  };
 
   return (
     <header className="main-header">
@@ -11,15 +13,11 @@ const Header = ({ isLoggedIn, onLogout }) => {
       <nav className="header-nav">
         <Link to="/">Home</Link>
         {isLoggedIn ? (
-          <>
-            <button onClick={() => { onLogout(); navigate('/'); }}>
-              Logout
-            </button>
-          </>
+          <button onClick={handleLogout}>Logout</button>
         ) : (
-          <button onClick={() => navigate('/login')}>
-            Sign In
-          </button>
+          <a href="http://localhost:5000/auth/google">
+            <button>Sign In with Google</button>
+          </a>
         )}
       </nav>
     </header>

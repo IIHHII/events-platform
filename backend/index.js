@@ -1,19 +1,44 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const app = express();
-const PORT = process.env.PORT || 5000;
+const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+const cors = require('cors');
+require('dotenv').config();
+require('./config/passport');
 
-app.use(cors());
+const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
+
 app.use(express.json());
 
-const eventsRouter = require("./routes/eventsRoutes");
-app.use("/api/events", eventsRouter);
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    httpOnly: true,
+    sameSite: 'lax', 
+  },
+}));
 
-app.get("/", (req, res) => {
-  res.send("Backend is running!");
+app.use(passport.initialize());
+app.use(passport.session());
+
+const authRoutes = require('./routes/authRoutes');
+app.use(authRoutes);
+
+const eventsRoutes = require('./routes/eventsRoutes');
+app.use('/api/events', eventsRoutes);
+
+app.get('/api/auth/me', (req, res) => {
+  res.json(req.user || null);
 });
 
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

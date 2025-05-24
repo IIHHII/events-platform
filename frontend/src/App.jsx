@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 import Header from './components/header';
 import EventsPage from './pages/eventsPage';
-import LoginPage from './pages/loginPage';
 import AddEventPage from './pages/addEventsPage';
 import EditEventPage from './pages/editEventsPage';
 import { getEvents } from './api/events';
@@ -12,10 +11,27 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [events, setEvents] = useState([]);
 
-  const handleLogin = () => setIsLoggedIn(true);
-  const handleLogout = () => setIsLoggedIn(false);
-
   useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/me', {
+          method: 'GET',
+          credentials: 'include',
+        });
+    
+        if (res.ok) {
+          const data = await res.json();
+          setIsLoggedIn(!!data);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error('Failed to check auth status:', error);
+        setIsLoggedIn(false);
+      }
+    };
+    
+
     const fetchEvents = async () => {
       try {
         const data = await getEvents();
@@ -24,8 +40,14 @@ function App() {
         console.error('Error loading events:', error);
       }
     };
+
+    checkAuthStatus();
     fetchEvents();
   }, []);
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
 
   return (
     <>
@@ -44,29 +66,24 @@ function App() {
         />
 
         <Route
-          path="/login"
-          element={
-            isLoggedIn
-              ? <Navigate to="/" replace />
-              : <LoginPage onLogin={handleLogin} />
-          }
-        />
-
-        <Route
           path="/add-event"
           element={
-            isLoggedIn
-              ? <AddEventPage events={events} setEvents={setEvents} />
-              : <Navigate to="/login" replace />
+            isLoggedIn ? (
+              <AddEventPage events={events} setEvents={setEvents} />
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
 
         <Route
           path="/edit-event/:id"
           element={
-            isLoggedIn
-              ? <EditEventPage events={events} setEvents={setEvents} />
-              : <Navigate to="/login" replace />
+            isLoggedIn ? (
+              <EditEventPage events={events} setEvents={setEvents} />
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
 
