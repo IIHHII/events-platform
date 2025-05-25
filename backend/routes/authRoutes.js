@@ -17,8 +17,13 @@ router.get('/auth/google',
 router.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req, res) => {
-    res.redirect('http://localhost:3000');
+    const role = req.user.role;
+    const redirectUrl = role === 'staff'
+      ? 'http://localhost:3000/staff'
+      : 'http://localhost:3000/';
+    res.redirect(redirectUrl);
   }
+  
 );
 
 router.get('/auth/logout', (req, res) => {

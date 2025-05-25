@@ -1,4 +1,3 @@
-// src/components/EventsList.jsx
 import React, { useEffect, useState } from 'react';
 import { getEvents } from '../api/events';
 

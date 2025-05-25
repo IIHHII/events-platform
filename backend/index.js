@@ -35,7 +35,11 @@ const eventsRoutes = require('./routes/eventsRoutes');
 app.use('/api/events', eventsRoutes);
 
 app.get('/api/auth/me', (req, res) => {
-  res.json(req.user || null);
+  if (req.user) {
+    res.json({ isLoggedIn: true, role: req.user.role });
+  } else {
+    res.json({ isLoggedIn: false });
+  }
 });
 
 const PORT = process.env.PORT || 5000;

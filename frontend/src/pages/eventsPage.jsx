@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/eventsList.css';
 import { deleteEvent } from '../api/events';
 
-const EventsPage = ({ events, setEvents, isLoggedIn }) => {
+const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
   const navigate = useNavigate();
 
   const handleDelete = async (id) => {
@@ -28,7 +28,7 @@ const EventsPage = ({ events, setEvents, isLoggedIn }) => {
           <p><strong>Location:</strong> {event.location}</p>
           <p>{event.description}</p>
 
-          {isLoggedIn ? (
+          {isLoggedIn && userRole === 'staff' ? (
             <div className="event-card-actions">
               <button onClick={() => navigate(`/edit-event/${event.id}`)}>Edit</button>
               <button onClick={() => handleDelete(event.id)}>Delete</button>
@@ -41,7 +41,7 @@ const EventsPage = ({ events, setEvents, isLoggedIn }) => {
         </div>
       ))}
 
-      {isLoggedIn && (
+      {isLoggedIn && userRole === 'staff' && (
         <button
           className="add-event-button"
           onClick={() => navigate('/add-event')}
@@ -52,6 +52,7 @@ const EventsPage = ({ events, setEvents, isLoggedIn }) => {
     </div>
   );
 };
+
 
 export default EventsPage;
 
