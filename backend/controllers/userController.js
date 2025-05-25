@@ -21,4 +21,11 @@ async function getUserById(id) {
   return res.rows[0];
 }
 
-module.exports = { findOrCreateUser, getUserById };
+async function updateUserTokens(userId, accessToken, refreshToken) {
+  await db.query('UPDATE users SET access_token = $1, refresh_token = $2 WHERE id = $3',
+ [accessToken, refreshToken, userId]);
+}
+
+
+module.exports = { findOrCreateUser, getUserById, updateUserTokens };
+

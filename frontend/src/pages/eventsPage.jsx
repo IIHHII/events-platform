@@ -17,6 +17,32 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
     }
   };
 
+  const handleSignUp = async (event) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/google/calendar/add-event', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventId: event.id,
+          title: event.title,
+          dateTime: event.dateTime,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert('Event added to your Google Calendar!');
+      } else {
+        alert('Failed: ' + data.error);
+      }
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  };
+
   return (
     <div className="events-page">
       <h2>Upcoming Events</h2>
@@ -35,7 +61,7 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
             </div>
           ) : (
             <div className="event-card-actions">
-              <button className="sign-up-btn">Sign Up</button>
+              <button className="sign-up-btn" onClick={() => handleSignUp(event)}>Sign Up</button>
             </div>
           )}
         </div>
@@ -53,6 +79,4 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
   );
 };
 
-
 export default EventsPage;
-

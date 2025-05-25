@@ -7,7 +7,6 @@ const {
   deleteEvent
 } = require('../controllers/eventsController');
 
-// Base path: /api/events
 router.get('/', getEvents);
 router.post('/', createEvent);
 router.put('/:id', updateEvent);
