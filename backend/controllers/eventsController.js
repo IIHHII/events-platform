@@ -1,4 +1,3 @@
-// backend/controllers/eventsController.js
 const db = require('../db');
 
 // GET /api/events
