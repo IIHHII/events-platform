@@ -7,6 +7,7 @@ import AddEventPage from './pages/addEventsPage';
 import EditEventPage from './pages/editEventsPage';
 import { getEvents } from './api/events';
 import API_URL from './api';
+import LoadingScreen from './components/loadingScreen';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -57,11 +58,9 @@ function App() {
     setUserRole(null);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return (
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <>
       <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
 

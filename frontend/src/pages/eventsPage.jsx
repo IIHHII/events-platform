@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/eventsList.css';
 import { deleteEvent } from '../api/events';
 import API_URL from '../api';
 import { formatUKDateTime } from '../utils/dateFormat';
+import LoadingScreen from '../components/loadingScreen';
 
 const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleDelete = async (id) => {
     if (window.confirm('Delete this event?')) {
@@ -20,6 +22,7 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
   };
 
   const handleSignUp = async (event) => {
+    setLoading(true);
     try {
       const response = await fetch(`${API_URL}/api/google/calendar/add-event`, {
         method: 'POST',
@@ -42,8 +45,12 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
       }
     } catch (error) {
       alert('Error: ' + error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <div className="events-page">
