@@ -10,6 +10,11 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  const sortedEvents = [...events].sort(
+    (a, b) => new Date(b.dateTime) - new Date(a.dateTime)
+  );  
+  
+
   const handleDelete = async (id) => {
     if (window.confirm('Delete this event?')) {
       try {
@@ -56,7 +61,7 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
     <div className="events-page">
       <h2>Upcoming Events</h2>
 
-      {events.map(event => (
+      {sortedEvents.map(event => (
         <div className="event-card" key={event.id}>
           <h3>{event.title}</h3>
           <p><strong>Date:</strong> {formatUKDateTime(event.dateTime)}</p>
