@@ -6,17 +6,18 @@ import EventsPage from './pages/eventsPage';
 import AddEventPage from './pages/addEventsPage';
 import EditEventPage from './pages/editEventsPage';
 import { getEvents } from './api/events';
-import StaffDashboardPage from './pages/staffDahBoard';
+import API_URL from './api';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/auth/me', {
+        const res = await fetch(`${API_URL}/api/auth/me`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -33,6 +34,8 @@ function App() {
         console.error('Failed to check auth status:', error);
         setIsLoggedIn(false);
         setUserRole(null);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -51,7 +54,12 @@ function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setUserRole(null);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -91,19 +99,6 @@ function App() {
             )
           }
         />
-
-
-        <Route
-          path="/staff"
-          element={
-            isLoggedIn && userRole === 'staff' ? (
-              <StaffDashboardPage events={events} setEvents={setEvents} />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          }
-        />
-
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

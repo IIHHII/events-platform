@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/eventsList.css';
 import { deleteEvent } from '../api/events';
+import API_URL from '../api';
+import { formatUKDateTime } from '../utils/dateFormat';
 
 const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
 
   const handleSignUp = async (event) => {
     try {
-      const response = await fetch('http://localhost:5000/api/google/calendar/add-event', {
+      const response = await fetch(`${API_URL}/api/google/calendar/add-event`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -50,7 +52,7 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
       {events.map(event => (
         <div className="event-card" key={event.id}>
           <h3>{event.title}</h3>
-          <p><strong>Date:</strong> {event.dateTime}</p>
+          <p><strong>Date:</strong> {formatUKDateTime(event.dateTime)}</p>
           <p><strong>Location:</strong> {event.location}</p>
           <p>{event.description}</p>
 

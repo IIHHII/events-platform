@@ -1,8 +1,5 @@
-const express = require('express');
 const { google } = require('googleapis');
-const router = express.Router();
-
-const { getUserById, updateUserTokens } = require('../controllers/userController');
+const { getUserById, updateUserTokens } = require('../models/userModel');
 
 function getOAuth2Client() {
   return new google.auth.OAuth2(
@@ -16,9 +13,9 @@ function ensureAuthenticated(req, res, next) {
   res.status(401).json({ error: 'Not authenticated' });
 }
 
-router.post('/add-event', ensureAuthenticated, async (req, res) => {
+async function addEvent(req, res) {
   try {
-    const { eventId, title, dateTime } = req.body;
+    const { title, dateTime } = req.body;
     const userId = req.user.id;
 
     const user = await getUserById(userId);
@@ -46,14 +43,8 @@ router.post('/add-event', ensureAuthenticated, async (req, res) => {
 
     const event = {
       summary: title,
-      start: {
-        dateTime: dateTime,
-        timeZone: 'UTC',
-      },
-      end: {
-        dateTime: dateTime,
-        timeZone: 'UTC',
-      },
+      start: { dateTime, timeZone: 'UTC' },
+      end: { dateTime, timeZone: 'UTC' },
     };
 
     await calendar.events.insert({
@@ -67,7 +58,9 @@ router.post('/add-event', ensureAuthenticated, async (req, res) => {
     console.error('Google Calendar API error:', error);
     res.status(500).json({ error: 'Failed to add event to calendar' });
   }
-});
+}
 
-module.exports = router;
-
+module.exports = {
+  ensureAuthenticated,
+  addEvent,
+};

@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/header.css';
+import API_URL from '../api';
 
-const Header = ({ isLoggedIn }) => {
+const Header = ({ isLoggedIn, onLogout }) => {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleLogout = () => {
-    window.location.href = 'http://localhost:5000/auth/logout';
+    setIsLoggingOut(true);
+    onLogout();
+    window.location.href = `${API_URL}/auth/logout`;
   };
 
   return (
@@ -13,9 +18,11 @@ const Header = ({ isLoggedIn }) => {
       <nav className="header-nav">
         <Link to="/">Home</Link>
         {isLoggedIn ? (
-          <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleLogout} disabled={isLoggingOut}>
+            {isLoggingOut ? 'Logging out...' : 'Logout'}
+          </button>
         ) : (
-          <a href="http://localhost:5000/auth/google">
+          <a href={`${API_URL}/auth/google`}>
             <button>Sign In with Google</button>
           </a>
         )}

@@ -25,8 +25,8 @@ const AddEventPage = ({ events, setEvents }) => {
     <div className="form-container">
       <h2>Add New Event</h2>
       <form className="event-form" onSubmit={handleSubmit}>
-        <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required />
-        <input type="text" placeholder="Date & Time" value={dateTime} onChange={e => setDateTime(e.target.value)} required />
+        <input type="text" placeholder="Name Of Event" value={title} onChange={e => setTitle(e.target.value)} required />
+        <input type="text" placeholder="Date & Time (e.g., 01/02/2023, 11:00pm)" value={dateTime} onChange={e => setDateTime(e.target.value)} required />
         <input type="text" placeholder="Location" value={location} onChange={e => setLocation(e.target.value)} required />
         <textarea placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} required />
         <button type="submit">Add Event</button>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getEvents } from '../api/events';
+import { formatUKDateTime } from '../utils/dateFormat';
 
 function EventsList() {
   const [events, setEvents] = useState([]);
@@ -14,7 +15,7 @@ function EventsList() {
       <ul>
         {events.map(event => (
           <li key={event.id}>
-            <strong>{event.title}</strong> – {event.dateTime} @ {event.location}
+            <strong>{event.title}</strong> – {formatUKDateTime(event.dateTime)} @ {event.location}
           </li>
         ))}
       </ul>

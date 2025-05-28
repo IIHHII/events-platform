@@ -34,7 +34,7 @@ app.use(authRoutes);
 const eventsRoutes = require('./routes/eventsRoutes');
 app.use('/api/events', eventsRoutes);
 
-const googleCalendarRoutes = require('./routes/googleCalendar');
+const googleCalendarRoutes = require('./routes/calendarRoutes');
 app.use('/api/google/calendar', googleCalendarRoutes);
 
 app.get('/api/auth/me', (req, res) => {

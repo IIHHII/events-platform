@@ -1,31 +1,39 @@
-const db = require('../db');
+const {
+  findOrCreateUser,
+  getUserById,
+  updateUserTokens
+} = require('../models/userModel');
 
-async function findOrCreateUser({ googleId, email, name, accessToken, refreshToken }) {
-  const res = await db.query('SELECT * FROM users WHERE google_id=$1', [googleId]);
-
-  if (res.rows.length > 0) {
-    return res.rows[0];
+async function handleFindOrCreateUser(req, res) {
+  try {
+    const user = await findOrCreateUser(req.body);
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  const insert = await db.query(
-    `INSERT INTO users (google_id, email, name, access_token, refresh_token, role)
-     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-    [googleId, email, name, accessToken, refreshToken, 'user']
-  );
-  return insert.rows[0];
 }
 
-
-async function getUserById(id) {
-  const res = await db.query('SELECT * FROM users WHERE id = $1', [id]);
-  return res.rows[0];
+async function handleGetUserById(req, res) {
+  try {
+    const user = await getUserById(req.params.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 }
 
-async function updateUserTokens(userId, accessToken, refreshToken) {
-  await db.query('UPDATE users SET access_token = $1, refresh_token = $2 WHERE id = $3',
- [accessToken, refreshToken, userId]);
+async function handleUpdateUserTokens(req, res) {
+  try {
+    await updateUserTokens(req.params.id, req.body.accessToken, req.body.refreshToken);
+    res.status(204).end();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 }
 
-
-module.exports = { findOrCreateUser, getUserById, updateUserTokens };
-
+module.exports = {
+  handleFindOrCreateUser,
+  handleGetUserById,
+  handleUpdateUserTokens
+};

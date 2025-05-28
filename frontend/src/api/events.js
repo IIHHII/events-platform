@@ -1,4 +1,6 @@
-const BASE_URL = 'http://localhost:5000/api/events';
+import API_URL from '../api';
+
+const BASE_URL = `${API_URL}/api/events`;
 
 export async function getEvents() {
   const res = await fetch(BASE_URL);
