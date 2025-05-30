@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 require('./config/passport');
 
@@ -13,6 +14,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(session({
   secret: process.env.SESSION_SECRET,

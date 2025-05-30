@@ -63,6 +63,51 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
 
   if (loading) return <LoadingScreen />;
 
+  const renderEventCard = (event, isPast = false) => {
+    console.log('Rendering event:', event);
+
+    const fullImageUrl = event.imageUrl
+      ? (event.imageUrl.startsWith('http') ? event.imageUrl : `${API_URL}${event.imageUrl}`)
+      : null;
+
+    console.log('Image URL:', event.imageUrl);
+    console.log('Final full image src:', fullImageUrl);
+
+    return (
+      <div className={`event-card ${isPast ? 'past' : ''}`} key={event.id}>
+        {event.imageUrl && (
+          <img
+            className="event-image"
+            src={fullImageUrl}
+            alt={event.title}
+            onError={(e) => {
+              console.warn('Image failed to load for:', event.title, fullImageUrl);
+              e.target.style.display = 'none';
+            }}
+          />
+        )}
+
+        <h3>{event.title}</h3>
+        <p><strong>Date:</strong> {formatUKDateTime(event.dateTime)}</p>
+        <p><strong>Location:</strong> {event.location}</p>
+        <p>{event.description}</p>
+
+        {!isPast && (
+          <div className="event-card-actions">
+            {isLoggedIn && userRole === 'staff' ? (
+              <>
+                <button onClick={() => navigate(`/edit-event/${event.id}`)}>Edit</button>
+                <button onClick={() => handleDelete(event.id)}>Delete</button>
+              </>
+            ) : isLoggedIn ? (
+              <button className="sign-up-btn" onClick={() => handleSignUp(event)}>Sign Up</button>
+            ) : null}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="events-page">
       <h2>Events</h2>
@@ -71,46 +116,18 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
       {upcomingEvents.length === 0 ? (
         <p>No upcoming events.</p>
       ) : (
-        upcomingEvents.map(event => (
-          <div className="event-card" key={event.id}>
-            <h3>{event.title}</h3>
-            <p><strong>Date:</strong> {formatUKDateTime(event.dateTime)}</p>
-            <p><strong>Location:</strong> {event.location}</p>
-            <p>{event.description}</p>
-
-            {isLoggedIn && userRole === 'staff' ? (
-              <div className="event-card-actions">
-                <button onClick={() => navigate(`/edit-event/${event.id}`)}>Edit</button>
-                <button onClick={() => handleDelete(event.id)}>Delete</button>
-              </div>
-            ) : (
-              <div className="event-card-actions">
-                <button className="sign-up-btn" onClick={() => handleSignUp(event)}>Sign Up</button>
-              </div>
-            )}
-          </div>
-        ))
+        upcomingEvents.map(event => renderEventCard(event))
       )}
 
       <h3>Past Events</h3>
       {pastEvents.length === 0 ? (
         <p>No past events.</p>
       ) : (
-        pastEvents.map(event => (
-          <div className="event-card past" key={event.id}>
-            <h3>{event.title}</h3>
-            <p><strong>Date:</strong> {formatUKDateTime(event.dateTime)}</p>
-            <p><strong>Location:</strong> {event.location}</p>
-            <p>{event.description}</p>
-          </div>
-        ))
+        pastEvents.map(event => renderEventCard(event, true))
       )}
 
       {isLoggedIn && userRole === 'staff' && (
-        <button
-          className="add-event-button"
-          onClick={() => navigate('/add-event')}
-        >
+        <button className="add-event-button" onClick={() => navigate('/add-event')}>
           + Add Event
         </button>
       )}
@@ -119,4 +136,3 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
 };
 
 export default EventsPage;
-

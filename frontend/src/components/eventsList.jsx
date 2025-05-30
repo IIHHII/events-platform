@@ -21,7 +21,20 @@ function EventsList() {
       <h2>All Events</h2>
       <ul>
         {events.map(event => (
-          <li key={event.id}>
+          <li key={event.id} style={{ marginBottom: '1.5rem' }}>
+            {event.image_url && (
+              <img
+                src={`http://localhost:5000${event.image_url}`}
+                alt={event.title}
+                style={{
+                  maxWidth: '200px',
+                  maxHeight: '150px',
+                  objectFit: 'cover',
+                  display: 'block',
+                  marginBottom: '0.5rem'
+                }}
+              />
+            )}
             <strong>{event.title}</strong> – {formatUKDateTime(event.dateTime)} @ {event.location}
           </li>
         ))}

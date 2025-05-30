@@ -11,7 +11,9 @@ async function getEvents(req, res) {
 
 async function createEvent(req, res) {
   try {
-    const { rows } = await EventModel.createEvent(req.body);
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+    const { title, dateTime, location, description } = req.body;
+    const { rows } = await EventModel.createEvent({ title, dateTime, location, description, imageUrl });
     res.status(201).json(rows[0]);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -21,7 +23,9 @@ async function createEvent(req, res) {
 async function updateEvent(req, res) {
   try {
     const { id } = req.params;
-    const { rows } = await EventModel.updateEvent(id, req.body);
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+    const { title, dateTime, location, description } = req.body;
+    const { rows } = await EventModel.updateEvent(id, { title, dateTime, location, description, imageUrl });
     if (rows.length === 0) return res.status(404).json({ error: 'Event not found' });
     res.json(rows[0]);
   } catch (err) {

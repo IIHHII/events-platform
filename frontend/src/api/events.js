@@ -3,7 +3,7 @@ import API_URL from '../api';
 const BASE_URL = `${API_URL}/api/events`;
 
 export async function getEvents() {
-  const res = await fetch(BASE_URL);
+  const res = await fetch(`${API_URL}/api/events`);
   if (!res.ok) throw new Error('Failed to fetch events');
   return res.json();
 }

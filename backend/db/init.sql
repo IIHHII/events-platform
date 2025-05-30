@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS events (
   date_time TIMESTAMP NOT NULL,
   location VARCHAR(255),
   description TEXT,
+  image_url VARCHAR(255),
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
