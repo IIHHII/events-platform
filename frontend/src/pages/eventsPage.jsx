@@ -92,18 +92,19 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
         <p><strong>Location:</strong> {event.location}</p>
         <p>{event.description}</p>
 
-        {!isPast && (
-          <div className="event-card-actions">
-            {isLoggedIn && userRole === 'staff' ? (
-              <>
+        <div className="event-card-actions">
+          {isLoggedIn && userRole === 'staff' ? (
+            <>
+              {!isPast && (
                 <button onClick={() => navigate(`/edit-event/${event.id}`)}>Edit</button>
-                <button onClick={() => handleDelete(event.id)}>Delete</button>
-              </>
-            ) : isLoggedIn ? (
-              <button className="sign-up-btn" onClick={() => handleSignUp(event)}>Sign Up</button>
-            ) : null}
-          </div>
-        )}
+              )}
+              <button onClick={() => handleDelete(event.id)}>Delete</button>
+            </>
+          ) : !isPast && isLoggedIn ? (
+            <button className="sign-up-btn" onClick={() => handleSignUp(event)}>Sign Up</button>
+          ) : null}
+        </div>
+
       </div>
     );
   };
