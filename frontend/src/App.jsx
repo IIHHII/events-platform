@@ -5,6 +5,7 @@ import Header from './components/header';
 import EventsPage from './pages/eventsPage';
 import AddEventPage from './pages/addEventsPage';
 import EditEventPage from './pages/editEventsPage';
+import EventDetailPage from './pages/eventDetailPage';
 import { getEvents } from './api/events';
 import API_URL from './api';
 import LoadingScreen from './components/loadingScreen';
@@ -75,6 +76,11 @@ function App() {
               userRole={userRole}
             />
           }
+        />
+
+        <Route
+          path="/event/:id"
+          element={<EventDetailPage user={{ role: userRole }} />}
         />
 
         <Route

@@ -4,10 +4,13 @@ const multer = require('multer');
 const path = require('path');
 const {
   getEvents,
+  getEventById,
   createEvent,
   updateEvent,
   deleteEvent
 } = require('../controllers/eventsController');
+
+const { ensureStaff } = require('../controllers/authController');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,8 +24,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.get('/', getEvents);
-router.post('/', upload.single('image'), createEvent);
-router.put('/:id', upload.single('image'), updateEvent);
-router.delete('/:id', deleteEvent);
+router.get('/:id', getEventById);
+
+router.post('/', upload.single('image'), ensureStaff, createEvent);
+router.put('/:id', upload.single('image'), ensureStaff, updateEvent);
+router.delete('/:id', ensureStaff, deleteEvent);
 
 module.exports = router;

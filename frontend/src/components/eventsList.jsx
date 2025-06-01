@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getEvents } from '../api/events';
 import { formatUKDateTime } from '../utils/dateFormat';
-import LoadingScreen from './LoadingScreen';
+import LoadingScreen from './loadingScreen';
+import API_URL from '../api';
+import '../styles/eventsList.css';
 
 function EventsList() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getEvents()
@@ -19,20 +23,21 @@ function EventsList() {
   return (
     <div>
       <h2>All Events</h2>
-      <ul>
+      <ul className="events-list">
         {events.map(event => (
-          <li key={event.id} style={{ marginBottom: '1.5rem' }}>
-            {event.image_url && (
+          <li
+            key={event.id}
+            className="events-list-item"
+            onClick={() => navigate(`/event/${event.id}`)}
+          >
+            {event.imageUrl && (
               <img
-                src={`http://localhost:5000${event.image_url}`}
+                src={
+                  event.imageUrl.startsWith('http')
+                    ? event.imageUrl
+                    : `${API_URL}${event.imageUrl}`
+                }
                 alt={event.title}
-                style={{
-                  maxWidth: '200px',
-                  maxHeight: '150px',
-                  objectFit: 'cover',
-                  display: 'block',
-                  marginBottom: '0.5rem'
-                }}
               />
             )}
             <strong>{event.title}</strong> – {formatUKDateTime(event.dateTime)} @ {event.location}

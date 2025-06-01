@@ -64,13 +64,17 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
   if (loading) return <LoadingScreen />;
 
   const renderEventCard = (event, isPast = false) => {
-
     const fullImageUrl = event.imageUrl
       ? (event.imageUrl.startsWith('http') ? event.imageUrl : `${API_URL}${event.imageUrl}`)
       : null;
 
     return (
-      <div className={`event-card ${isPast ? 'past' : ''}`} key={event.id}>
+      <div
+        key={event.id}
+        className={`event-card ${isPast ? 'past' : ''}`}
+        onClick={() => navigate(`/event/${event.id}`)}
+        style={{ cursor: 'pointer' }}
+      >
         {event.imageUrl && (
           <img
             className="event-image"
@@ -88,7 +92,10 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
         <p><strong>Location:</strong> {event.location}</p>
         <p>{event.description}</p>
 
-        <div className="event-card-actions">
+        <div
+          className="event-card-actions"
+          onClick={(e) => e.stopPropagation()}
+        >
           {isLoggedIn && userRole === 'staff' ? (
             <>
               {!isPast && (
@@ -100,7 +107,6 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
             <button className="sign-up-btn" onClick={() => handleSignUp(event)}>Sign Up</button>
           ) : null}
         </div>
-
       </div>
     );
   };

@@ -9,6 +9,17 @@ async function getEvents(req, res) {
   }
 }
 
+async function getEventById(req, res) {
+  try {
+    const { id } = req.params;
+    const { rows } = await EventModel.getEventById(id);
+    if (rows.length === 0) return res.status(404).json({ error: 'Event not found' });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 async function createEvent(req, res) {
   try {
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
@@ -46,6 +57,7 @@ async function deleteEvent(req, res) {
 
 module.exports = {
   getEvents,
+  getEventById,
   createEvent,
   updateEvent,
   deleteEvent

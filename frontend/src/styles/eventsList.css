@@ -42,3 +42,34 @@
   object-fit: cover;
   border-radius: 8px;
 }
+
+.events-list {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0;
+  list-style: none;
+}
+
+.events-list-item {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease;
+}
+
+.events-list-item:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.events-list-item img {
+  max-width: 200px;
+  max-height: 150px;
+  object-fit: cover;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  align-self: flex-start;
+}

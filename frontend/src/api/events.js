@@ -3,8 +3,14 @@ import API_URL from '../api';
 const BASE_URL = `${API_URL}/api/events`;
 
 export async function getEvents() {
-  const res = await fetch(`${API_URL}/api/events`);
+  const res = await fetch(BASE_URL);
   if (!res.ok) throw new Error('Failed to fetch events');
+  return res.json();
+}
+
+export async function getEventById(id) {
+  const res = await fetch(`${BASE_URL}/${id}`);
+  if (!res.ok) throw new Error('Failed to fetch event');
   return res.json();
 }
 
@@ -30,7 +36,7 @@ export async function updateEvent(id, event) {
 
 export async function deleteEvent(id) {
   const res = await fetch(`${BASE_URL}/${id}`, {
-    method: 'DELETE'
+    method: 'DELETE',
   });
   if (!res.ok) throw new Error('Failed to delete event');
   return true;
