@@ -64,14 +64,10 @@ const EventsPage = ({ events, setEvents, isLoggedIn, userRole }) => {
   if (loading) return <LoadingScreen />;
 
   const renderEventCard = (event, isPast = false) => {
-    console.log('Rendering event:', event);
 
     const fullImageUrl = event.imageUrl
       ? (event.imageUrl.startsWith('http') ? event.imageUrl : `${API_URL}${event.imageUrl}`)
       : null;
-
-    console.log('Image URL:', event.imageUrl);
-    console.log('Final full image src:', fullImageUrl);
 
     return (
       <div className={`event-card ${isPast ? 'past' : ''}`} key={event.id}>
