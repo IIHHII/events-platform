@@ -2,8 +2,10 @@ import API_URL from '../api';
 
 const BASE_URL = `${API_URL}/api/events`;
 
-export async function getEvents() {
-  const res = await fetch(BASE_URL);
+export async function getEvents(filters = {}) {
+  const params = new URLSearchParams(filters).toString();
+  const url = `${BASE_URL}${params ? `?${params}` : ''}`;
+  const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to fetch events');
   return res.json();
 }

@@ -2,7 +2,12 @@ const EventModel = require('../models/eventsModel');
 
 async function getEvents(req, res) {
   try {
-    const { rows } = await EventModel.getAllEvents();
+    const filters = {
+      category: req.query.category,
+      location: req.query.location,
+      date: req.query.date
+    };
+    const { rows } = await EventModel.getAllEvents(filters);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -23,8 +28,8 @@ async function getEventById(req, res) {
 async function createEvent(req, res) {
   try {
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-    const { title, dateTime, location, description } = req.body;
-    const { rows } = await EventModel.createEvent({ title, dateTime, location, description, imageUrl });
+    const { title, dateTime, location, category, description } = req.body;
+    const { rows } = await EventModel.createEvent({ title, dateTime, location, category, description, imageUrl });
     res.status(201).json(rows[0]);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -35,8 +40,8 @@ async function updateEvent(req, res) {
   try {
     const { id } = req.params;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-    const { title, dateTime, location, description } = req.body;
-    const { rows } = await EventModel.updateEvent(id, { title, dateTime, location, description, imageUrl });
+    const { title, dateTime, location, category, description } = req.body;
+    const { rows } = await EventModel.updateEvent(id, { title, dateTime, location, category, description, imageUrl });
     if (rows.length === 0) return res.status(404).json({ error: 'Event not found' });
     res.json(rows[0]);
   } catch (err) {

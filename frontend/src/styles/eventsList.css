@@ -73,3 +73,10 @@
   border-radius: 8px;
   align-self: flex-start;
 }
+
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
