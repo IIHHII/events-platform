@@ -29,13 +29,13 @@ function logout(req, res) {
 }
 
 function ensureStaff(req, res, next) {
-  if (req.isAuthenticated && req.isAuthenticated()) {
-    if (req.user.role === 'staff') {
-      return next();
-    }
-    return res.status(403).json({ error: 'Forbidden: Staff only' });
+  if (!req.isAuthenticated || !req.isAuthenticated()) {
+    return res.status(401).json({ error: 'Unauthorized: Please log in' });
   }
-  res.status(401).json({ error: 'Unauthorized' });
+  if (!req.user || req.user.role !== 'staff') {
+    return res.status(403).json({ error: 'Forbidden: Staff access only' });
+  }
+  next();
 }
 
 module.exports = {

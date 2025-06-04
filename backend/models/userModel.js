@@ -4,7 +4,12 @@ async function findOrCreateUser({ googleId, email, name, accessToken, refreshTok
   const res = await db.query('SELECT * FROM users WHERE google_id=$1', [googleId]);
 
   if (res.rows.length > 0) {
-    return res.rows[0];
+    await db.query(
+      'UPDATE users SET access_token = $1, refresh_token = $2 WHERE google_id = $3',
+      [accessToken, refreshToken, googleId]
+    );
+    const updated = await db.query('SELECT * FROM users WHERE google_id=$1', [googleId]);
+    return updated.rows[0];
   }
 
   const insert = await db.query(
@@ -14,6 +19,7 @@ async function findOrCreateUser({ googleId, email, name, accessToken, refreshTok
   );
   return insert.rows[0];
 }
+
 
 async function getUserById(id) {
   const res = await db.query('SELECT * FROM users WHERE id = $1', [id]);

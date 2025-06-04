@@ -21,6 +21,7 @@ export async function createEvent(event) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(event),
+    credentials: 'include',
   });
   if (!res.ok) throw new Error('Failed to create event');
   return res.json();
@@ -31,6 +32,7 @@ export async function updateEvent(id, event) {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(event),
+    credentials: 'include',
   });
   if (!res.ok) throw new Error('Failed to update event');
   return res.json();
@@ -39,6 +41,7 @@ export async function updateEvent(id, event) {
 export async function deleteEvent(id) {
   const res = await fetch(`${BASE_URL}/${id}`, {
     method: 'DELETE',
+    credentials: 'include',
   });
   if (!res.ok) throw new Error('Failed to delete event');
   return true;

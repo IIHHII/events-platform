@@ -23,19 +23,19 @@
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    color: #276d74;
+    color: #000000;
   }
   
   .event-detail-info {
     font-size: 1rem;
     margin-bottom: 0.75rem;
-    color: #333;
+    color: #000000;
   }
   
   .event-detail-description {
     margin-top: 1rem;
     line-height: 1.5;
-    color: #555;
+    color: #000000;
   }
   
   .event-detail-actions {
@@ -54,21 +54,21 @@
   }
   
   .event-detail-button.edit {
-    background-color: #276d74;
+    background-color: #2563EB;
     color: white;
   }
   
   .event-detail-button.edit:hover {
-    background-color: #1f4d52;
+    background-color: #1D4ED8;
   }
   
   .event-detail-button.delete {
-    background-color: #c0392b;
+    background-color: #2563EB;
     color: white;
   }
   
   .event-detail-button.delete:hover {
-    background-color: #922b21;
+    background-color: #1D4ED8;
   }
   
   @media (max-width: 600px) {

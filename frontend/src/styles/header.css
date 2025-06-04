@@ -15,14 +15,17 @@
 .header-nav {
   display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
 .header-nav a,
-.header-nav button {
+.header-nav button,
+.auth-button {
   color: white;
   text-decoration: none;
   background: none;
   border: none;
   font-size: 1rem;
   cursor: pointer;
+  padding: 0;
 }

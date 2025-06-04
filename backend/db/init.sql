@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS events (
   title VARCHAR(255) NOT NULL,
   date_time TIMESTAMP NOT NULL,
   location VARCHAR(255),
-  category TEXT,
+  category TEXT NOT NULL,
   description TEXT,
   image_url VARCHAR(255),
   created_at TIMESTAMP DEFAULT NOW(),

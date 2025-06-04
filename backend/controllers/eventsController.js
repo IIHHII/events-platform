@@ -27,14 +27,18 @@ async function getEventById(req, res) {
 
 async function createEvent(req, res) {
   try {
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
     const { title, dateTime, location, category, description } = req.body;
+    if (!category || category.trim() === '') {
+      return res.status(400).json({ error: 'Category is required' });
+    }
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
     const { rows } = await EventModel.createEvent({ title, dateTime, location, category, description, imageUrl });
     res.status(201).json(rows[0]);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 }
+
 
 async function updateEvent(req, res) {
   try {

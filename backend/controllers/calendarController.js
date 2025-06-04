@@ -9,7 +9,9 @@ function getOAuth2Client() {
 }
 
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) return next();
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return next();
+  }
   res.status(401).json({ error: 'Not authenticated' });
 }
 
@@ -19,8 +21,9 @@ async function addEvent(req, res) {
     const userId = req.user.id;
 
     const user = await getUserById(userId);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
     if (!user.access_token || !user.refresh_token) {
       return res.status(400).json({ error: 'Google tokens missing' });
     }
@@ -40,23 +43,33 @@ async function addEvent(req, res) {
     });
 
     const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
-
-    const event = {
+    const eventResource = {
       summary: title,
       start: { dateTime, timeZone: 'UTC' },
       end: { dateTime, timeZone: 'UTC' },
     };
-
     await calendar.events.insert({
       calendarId: 'primary',
-      resource: event,
+      resource: eventResource,
     });
 
-    res.json({ success: true, message: 'Event added to Google Calendar' });
-
+    return res.json({ success: true, message: 'Event added to Google Calendar' });
   } catch (error) {
-    console.error('Google Calendar API error:', error);
-    res.status(500).json({ error: 'Failed to add event to calendar' });
+    const errData = error?.response?.data;
+    if (errData && errData.error === 'invalid_grant') {
+      try {
+        await updateUserTokens(req.user.id, null, null);
+        console.warn(`Cleared expired Google tokens for user ${req.user.id}`);
+      } catch (dbErr) {
+        console.error('Error clearing tokens from DB:', dbErr);
+      }
+      return res
+        .status(401)
+        .json({ error: 'Google token expired or revoked. Please re-authenticate.' });
+    }
+
+    console.error('Google Calendar API error:', error.message || error.toString());
+    return res.status(500).json({ error: 'Failed to add event to calendar' });
   }
 }
 

@@ -55,7 +55,7 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
     }
   };
 
-  const handleSignUp = async (event) => {
+  const handleSignUp = async (eventObj) => {
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}/api/google/calendar/add-event`, {
@@ -65,17 +65,36 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          eventId: event.id,
-          title: event.title,
-          dateTime: event.dateTime,
+          eventId: eventObj.id,
+          title: eventObj.title,
+          dateTime: eventObj.dateTime,
         }),
       });
+
+      if (response.status === 400) {
+        const err = await response.json();
+        if (err.error === 'Google tokens missing') {
+          alert('Your Google session has expired. Redirecting to re-authenticate.');
+          window.location.href = '/auth/google';
+          return;
+        }
+      }
+      if (response.status === 401) {
+        const err = await response.json();
+        if (
+          err.error === 'Google token expired or revoked. Please re-authenticate.'
+        ) {
+          alert('Your Google session has expired. Redirecting to re-authenticate.');
+          window.location.href = '/auth/google';
+          return;
+        }
+      }
 
       const data = await response.json();
       if (response.ok) {
         alert('Event added to your Google Calendar!');
       } else {
-        alert('Failed: ' + data.error);
+        alert('Failed: ' + (data.error || 'Unknown error'));
       }
     } catch (error) {
       alert('Error: ' + error.message);
@@ -98,53 +117,83 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
   const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
   const upcomingEvents = [...events]
-    .filter((event) => new Date(event.dateTime) >= twentyFourHoursAgo)
+    .filter((ev) => new Date(ev.dateTime) >= twentyFourHoursAgo)
     .sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
 
   const pastEvents = [...events]
-    .filter((event) => new Date(event.dateTime) < twentyFourHoursAgo)
+    .filter((ev) => new Date(ev.dateTime) < twentyFourHoursAgo)
     .sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+
+  const uniqueLocations = Array.from(
+    new Set(events.map((ev) => ev.location).filter((loc) => loc && loc.trim() !== ''))
+  );
 
   if (loading) return <LoadingScreen />;
 
-  const renderEventCard = (event, isPast = false) => {
-    const fullImageUrl = event.imageUrl
-      ? (event.imageUrl.startsWith('http') ? event.imageUrl : `${API_URL}${event.imageUrl}`)
+  const renderEventCard = (ev, isPast = false) => {
+    const fullImageUrl = ev.imageUrl
+      ? (ev.imageUrl.startsWith('http')
+          ? ev.imageUrl
+          : `${API_URL}${ev.imageUrl}`)
       : null;
 
     return (
       <div
-        key={event.id}
+        key={ev.id}
         className={`event-card ${isPast ? 'past' : ''}`}
-        onClick={() => navigate(`/event/${event.id}`)}
+        onClick={() => navigate(`/event/${ev.id}`)}
         style={{ cursor: 'pointer' }}
       >
-        {event.imageUrl && (
+        {ev.imageUrl && (
           <img
             className="event-image"
             src={fullImageUrl}
-            alt={event.title}
+            alt={ev.title}
             onError={(e) => {
-              console.warn('Image failed to load for:', event.title, fullImageUrl);
+              console.warn(
+                'Image failed to load for:',
+                ev.title,
+                fullImageUrl
+              );
               e.target.style.display = 'none';
             }}
           />
         )}
 
-        <h3>{event.title}</h3>
-        <p><strong>Date:</strong> {formatUKDateTime(event.dateTime)}</p>
-        <p><strong>Location:</strong> {event.location}</p>
-        <p>{event.description}</p>
-        {event.category && <p><strong>Category:</strong> {event.category}</p>}
+        <h3>{ev.title}</h3>
+        <p>
+          <strong>Date:</strong> {formatUKDateTime(ev.dateTime)}
+        </p>
+        <p>
+          <strong>Location:</strong> {ev.location}
+        </p>
+        <p>{ev.description}</p>
+        {ev.category && (
+          <p>
+            <strong>Category:</strong> {ev.category}
+          </p>
+        )}
 
-        <div className="event-card-actions" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="event-card-actions"
+          onClick={(e) => e.stopPropagation()}
+        >
           {isLoggedIn && userRole === 'staff' ? (
             <>
-              {!isPast && <button onClick={() => navigate(`/edit-event/${event.id}`)}>Edit</button>}
-              <button onClick={() => handleDelete(event.id)}>Delete</button>
+              {!isPast && (
+                <button onClick={() => navigate(`/edit-event/${ev.id}`)}>
+                  Edit
+                </button>
+              )}
+              <button onClick={() => handleDelete(ev.id)}>Delete</button>
             </>
           ) : (!isPast && isLoggedIn) ? (
-            <button className="sign-up-btn" onClick={() => handleSignUp(event)}>Sign Up</button>
+            <button
+              className="sign-up-btn"
+              onClick={() => handleSignUp(ev)}
+            >
+              Sign Up
+            </button>
           ) : null}
         </div>
       </div>
@@ -156,24 +205,37 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
       <h2>Events</h2>
 
       <form className="filter-container" onSubmit={handleFilterSubmit}>
-        <input
+        <select
           name="category"
-          placeholder="Filter by category"
           value={filters.category}
           onChange={handleFilterChange}
-        />
-        <input
+        >
+          <option value="">All Categories</option>
+          <option value="Music">Music</option>
+          <option value="Sport">Sport</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <select
           name="location"
-          placeholder="Filter by location"
           value={filters.location}
           onChange={handleFilterChange}
-        />
+        >
+          <option value="">All Locations</option>
+          {uniqueLocations.map((loc) => (
+            <option key={loc} value={loc}>
+              {loc}
+            </option>
+          ))}
+        </select>
+
         <input
           type="date"
           name="date"
           value={filters.date}
           onChange={handleFilterChange}
         />
+
         <button type="submit">Apply Filters</button>
       </form>
 
@@ -181,18 +243,21 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
       {upcomingEvents.length === 0 ? (
         <p>No upcoming events.</p>
       ) : (
-        upcomingEvents.map((event) => renderEventCard(event))
+        upcomingEvents.map((ev) => renderEventCard(ev))
       )}
 
       <h3>Past Events</h3>
       {pastEvents.length === 0 ? (
         <p>No past events.</p>
       ) : (
-        pastEvents.map((event) => renderEventCard(event, true))
+        pastEvents.map((ev) => renderEventCard(ev, true))
       )}
 
       {isLoggedIn && userRole === 'staff' && (
-        <button className="add-event-button" onClick={() => navigate('/add-event')}>
+        <button
+          className="add-event-button"
+          onClick={() => navigate('/add-event')}
+        >
           + Add Event
         </button>
       )}

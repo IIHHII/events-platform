@@ -22,8 +22,8 @@ const Header = ({ isLoggedIn, onLogout }) => {
             {isLoggingOut ? 'Logging out...' : 'Logout'}
           </button>
         ) : (
-          <a href={`${API_URL}/auth/google`}>
-            <button>Sign In with Google</button>
+          <a href={`${API_URL}/auth/google`} className="auth-button">
+            Sign In with Google
           </a>
         )}
       </nav>
