@@ -133,8 +133,8 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
   const renderEventCard = (ev, isPast = false) => {
     const fullImageUrl = ev.imageUrl
       ? (ev.imageUrl.startsWith('http')
-          ? ev.imageUrl
-          : `${API_URL}${ev.imageUrl}`)
+        ? ev.imageUrl
+        : `${API_URL}${ev.imageUrl}`)
       : null;
 
     return (
@@ -150,11 +150,7 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
             src={fullImageUrl}
             alt={ev.title}
             onError={(e) => {
-              console.warn(
-                'Image failed to load for:',
-                ev.title,
-                fullImageUrl
-              );
+              console.warn('Image failed to load for:', ev.title, fullImageUrl);
               e.target.style.display = 'none';
             }}
           />
@@ -178,7 +174,7 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
           className="event-card-actions"
           onClick={(e) => e.stopPropagation()}
         >
-          {isLoggedIn && userRole === 'staff' ? (
+          {isLoggedIn && userRole === 'staff' && (
             <>
               {!isPast && (
                 <button onClick={() => navigate(`/edit-event/${ev.id}`)}>
@@ -187,18 +183,30 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
               )}
               <button onClick={() => handleDelete(ev.id)}>Delete</button>
             </>
-          ) : (!isPast && isLoggedIn) ? (
+          )}
+
+          {isLoggedIn && userRole !== 'staff' && !isPast && (
             <button
               className="sign-up-btn"
               onClick={() => handleSignUp(ev)}
             >
               Sign Up
             </button>
-          ) : null}
+          )}
+
+          {isLoggedIn && userRole === 'staff' && !isPast && (
+            <button
+              className="sign-up-btn"
+              onClick={() => handleSignUp(ev)}
+            >
+              Sign Up
+            </button>
+          )}
         </div>
       </div>
     );
   };
+
 
   return (
     <div className="events-page">
@@ -210,10 +218,84 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
           value={filters.category}
           onChange={handleFilterChange}
         >
-          <option value="">All Categories</option>
-          <option value="Music">Music</option>
-          <option value="Sport">Sport</option>
           <option value="Other">Other</option>
+            <option value="Alumni Meetup">Alumni Meetup</option>
+            <option value="Anime & Manga">Anime & Manga</option>
+            <option value="Architecture">Architecture</option>
+            <option value="Art">Art</option>
+            <option value="Awareness Campaign">Awareness Campaign</option>
+            <option value="Board Game Night">Board Game Night</option>
+            <option value="Business">Business</option>
+            <option value="Camping Trip">Camping Trip</option>
+            <option value="Career Fair">Career Fair</option>
+            <option value="Charity">Charity</option>
+            <option value="City Tour">City Tour</option>
+            <option value="Coding / Programming">Coding / Programming</option>
+            <option value="Coding Bootcamp">Coding Bootcamp</option>
+            <option value="Community">Community</option>
+            <option value="Conference">Conference</option>
+            <option value="Cooking Class">Cooking Class</option>
+            <option value="Cosplay / Costume Party">Cosplay / Costume Party</option>
+            <option value="Crafts & DIY">Crafts & DIY</option>
+            <option value="Cultural Celebration">Cultural Celebration</option>
+            <option value="Dance">Dance</option>
+            <option value="Design">Design</option>
+            <option value="Education">Education</option>
+            <option value="Environmental / Sustainability">Environmental / Sustainability</option>
+            <option value="Expo / Trade Show">Expo / Trade Show</option>
+            <option value="Family">Family</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Festival">Festival</option>
+            <option value="Film">Film</option>
+            <option value="Financial Literacy">Financial Literacy</option>
+            <option value="Fitness Class">Fitness Class</option>
+            <option value="Food & Drink">Food & Drink</option>
+            <option value="Fundraiser">Fundraiser</option>
+            <option value="Gaming">Gaming</option>
+            <option value="Gardening">Gardening</option>
+            <option value="Garage Sale">Garage Sale</option>
+            <option value="Health & Wellness">Health & Wellness</option>
+            <option value="Hiking / Outdoor Adventure">Hiking / Outdoor Adventure</option>
+            <option value="Kids' Crafts">Kids' Crafts</option>
+            <option value="Karaoke">Karaoke</option>
+            <option value="Language Class">Language Class</option>
+            <option value="Language Exchange">Language Exchange</option>
+            <option value="Life Coaching">Life Coaching</option>
+            <option value="Literature / Book Club">Literature / Book Club</option>
+            <option value="Meditation">Meditation</option>
+            <option value="Mindfulness">Mindfulness</option>
+            <option value="Movie Screening">Movie Screening</option>
+            <option value="Music">Music</option>
+            <option value="Networking">Networking</option>
+            <option value="Nutrition">Nutrition</option>
+            <option value="Open Mic">Open Mic</option>
+            <option value="Panel Discussion">Panel Discussion</option>
+            <option value="Personal Development">Personal Development</option>
+            <option value="Photography">Photography</option>
+            <option value="Pitch Night">Pitch Night</option>
+            <option value="Poetry">Poetry</option>
+            <option value="Pop-up Market">Pop-up Market</option>
+            <option value="Product Launch">Product Launch</option>
+            <option value="Protest / Rally">Protest / Rally</option>
+            <option value="Public Speaking">Public Speaking</option>
+            <option value="Religious">Religious</option>
+            <option value="Research Symposium">Research Symposium</option>
+            <option value="Retreat">Retreat</option>
+            <option value="Science">Science</option>
+            <option value="Sport">Sport</option>
+            <option value="Stand-up Comedy">Stand-up Comedy</option>
+            <option value="Startup Meetup">Startup Meetup</option>
+            <option value="STEM for Kids">STEM for Kids</option>
+            <option value="Story Time">Story Time</option>
+            <option value="Summer Camp">Summer Camp</option>
+            <option value="Technology">Technology</option>
+            <option value="Teen Hangout">Teen Hangout</option>
+            <option value="Theater">Theater</option>
+            <option value="Travel">Travel</option>
+            <option value="Trivia Night">Trivia Night</option>
+            <option value="Volunteer Event">Volunteer Event</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Yoga">Yoga</option>
         </select>
 
         <select
