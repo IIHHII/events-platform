@@ -1,5 +1,5 @@
 .main-header {
-  background-color: #276d74;
+  background-color: #2563EB;
   color: white;
   padding: 1rem 2rem;
   display: flex;
@@ -21,11 +21,21 @@
 .header-nav a,
 .header-nav button,
 .auth-button {
+  background-color: #2563EB;
   color: white;
-  text-decoration: none;
-  background: none;
   border: none;
-  font-size: 1rem;
+  border-radius: 8px;
+  padding: 0.55rem 1.2rem;
+  font-size: 1.2rem;
+  font-weight: 700;
   cursor: pointer;
-  padding: 0;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
 }
+
+.header-nav a:hover,
+.header-nav button:hover,
+.auth-button:hover {
+  background-color: #1D4ED8;
+}
+

@@ -1,0 +1,28 @@
+.events-page {
+    padding: 2rem;
+    max-width: 900px;
+    margin: auto;
+  }
+  
+  .add-event-wrapper {
+    margin-bottom: 1.5rem;
+  }
+  
+  .add-event-button {
+    background: #2563EB;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 2rem;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: block;
+    margin: 0 auto 2rem auto;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-event-button:hover {
+    background-color: #1D4ED8;
+  }
+  

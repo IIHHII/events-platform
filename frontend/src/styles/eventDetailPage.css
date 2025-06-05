@@ -1,88 +1,87 @@
 .event-detail-container {
-    max-width: 900px;
-    margin: 2rem auto;
-    padding: 1rem 2rem;
-    background: #fefefe;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    min-height: 80vh;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
+  background: #fefefe;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+}
+
+.event-detail-image {
+  width: 100%;
+  height: 33vh;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.event-detail-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #000000;
+}
+
+.event-detail-info {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: #000000;
+}
+
+.event-detail-description {
+  margin-top: 1rem;
+  line-height: 1.5;
+  color: #000000;
+}
+
+.event-detail-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 1rem;
+}
+
+.event-detail-button {
+  padding: 0.5rem 1.25rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.event-detail-button.edit {
+  background-color: #2563EB;
+  color: white;
+}
+
+.event-detail-button.edit:hover {
+  background-color: #1D4ED8;
+}
+
+.event-detail-button.delete {
+  background-color: #2563EB;
+  color: white;
+}
+
+.event-detail-button.delete:hover {
+  background-color: #1D4ED8;
+}
+
+@media (max-width: 600px) {
+  .event-detail-container {
+    padding: 1rem;
+    margin: 1rem;
   }
-  
-  .event-detail-image {
-    width: 100%;
-    height: 33vh;
-    object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-  
+
   .event-detail-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #000000;
+    font-size: 1.5rem;
   }
-  
-  .event-detail-info {
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
-    color: #000000;
-  }
-  
-  .event-detail-description {
-    margin-top: 1rem;
-    line-height: 1.5;
-    color: #000000;
-  }
-  
-  .event-detail-actions {
-    margin-top: auto;
-    display: flex;
-    gap: 1rem;
-  }
-  
+
   .event-detail-button {
-    padding: 0.5rem 1.25rem;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
   }
-  
-  .event-detail-button.edit {
-    background-color: #2563EB;
-    color: white;
-  }
-  
-  .event-detail-button.edit:hover {
-    background-color: #1D4ED8;
-  }
-  
-  .event-detail-button.delete {
-    background-color: #2563EB;
-    color: white;
-  }
-  
-  .event-detail-button.delete:hover {
-    background-color: #1D4ED8;
-  }
-  
-  @media (max-width: 600px) {
-    .event-detail-container {
-      padding: 1rem;
-      margin: 1rem;
-    }
-  
-    .event-detail-title {
-      font-size: 1.5rem;
-    }
-  
-    .event-detail-button {
-      font-size: 0.9rem;
-    }
-  }
-  
+}

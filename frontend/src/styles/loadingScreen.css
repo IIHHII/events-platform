@@ -11,9 +11,10 @@
     left: 0;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
-}
-
-.loading-screen.hidden {
+  }
+  
+  .loading-screen.hidden {
     opacity: 0;
     pointer-events: none;
-}
+  }
+  
