@@ -61,10 +61,39 @@ async function deleteEvent(id) {
   return db.query('DELETE FROM events WHERE id = $1', [id]);
 }
 
+async function insertBulkEvents(events) {
+  const values = events.map(event => [
+    event.title,
+    event.date_time,
+    event.location,
+    event.category,
+    event.description || null,
+    event.image_url || null,
+  ]);
+
+  const placeholders = values
+    .map((_, i) =>
+      `($${i * 6 + 1}, $${i * 6 + 2}, $${i * 6 + 3}, $${i * 6 + 4}, $${i * 6 + 5}, $${i * 6 + 6})`
+    )
+    .join(',');
+
+  const flatValues = values.flat();
+
+  const query = `
+    INSERT INTO events (title, date_time, location, category, description, image_url)
+    VALUES ${placeholders}
+    RETURNING *;
+  `;
+
+  const result = await db.query(query, flatValues);
+  return result.rows;
+}
+
 module.exports = {
   getAllEvents,
   getEventById,
   createEvent,
   updateEvent,
-  deleteEvent
+  deleteEvent,
+  insertBulkEvents
 };

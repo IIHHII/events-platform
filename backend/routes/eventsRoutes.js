@@ -7,7 +7,8 @@ const {
   getEventById,
   createEvent,
   updateEvent,
-  deleteEvent
+  deleteEvent,
+  createBulkEvents
 } = require('../controllers/eventsController');
 
 const { ensureStaff } = require('../controllers/authController');
@@ -27,6 +28,8 @@ router.get('/', getEvents);
 router.get('/:id', getEventById);
 
 router.post('/', upload.single('image'), ensureStaff, createEvent);
+router.post('/events/bulk', createBulkEvents);
+
 router.put('/:id', upload.single('image'), ensureStaff, updateEvent);
 router.delete('/:id', ensureStaff, deleteEvent);
 

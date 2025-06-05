@@ -1,4 +1,5 @@
 const EventModel = require('../models/eventsModel');
+const db = require('../db');
 
 async function getEvents(req, res) {
   try {
@@ -64,10 +65,38 @@ async function deleteEvent(req, res) {
   }
 }
 
+async function createBulkEvents(req, res) {
+  const { events } = req.body;
+
+  if (!Array.isArray(events)) {
+    return res.status(400).json({ error: 'Expected an array of events' });
+  }
+
+  const isValid = events.every(
+    (e) => e.title && e.date_time && e.location && e.category
+  );
+
+  if (!isValid) {
+    return res.status(400).json({
+      error: 'Each event must include title, date_time, location, and category',
+    });
+  }
+
+  try {
+    const insertedEvents = await insertBulkEvents(events);
+    res.status(201).json(insertedEvents);
+  } catch (error) {
+    console.error('Bulk insert failed:', error);
+    res.status(500).json({ error: 'Bulk insert failed' });
+  }
+}
+
+
 module.exports = {
   getEvents,
   getEventById,
   createEvent,
   updateEvent,
-  deleteEvent
+  deleteEvent,
+  createBulkEvents
 };
