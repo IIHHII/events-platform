@@ -30,6 +30,7 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [events, setEvents] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
   const [filters, setFilters] = useState({ category: '', location: '', date: '' });
 
   const fetchEvents = async (filterParams = {}) => {
@@ -40,6 +41,9 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
       const res = await fetch(url);
       const data = await res.json();
       setEvents(data);
+      if (Object.keys(filterParams).length === 0) {
+        setAllEvents(data);
+      }
     } catch (err) {
       console.error('Failed to fetch events:', err);
     } finally {
@@ -56,6 +60,7 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
       try {
         await deleteEvent(id);
         setEvents(events.filter((e) => e.id !== id));
+        setAllEvents(allEvents.filter((e) => e.id !== id));
       } catch (err) {
         alert('Failed to delete event: ' + err.message);
       }
@@ -108,7 +113,7 @@ const EventsPage = ({ isLoggedIn, userRole }) => {
   const pastEvents = events.filter(ev => new Date(ev.dateTime) < pastThreshold);
 
   const uniqueLocations = Array.from(
-    new Set(events.map(ev => ev.location).filter(Boolean))
+    new Set(allEvents.map(ev => ev.location).filter(Boolean))
   );
 
   const getImageUrl = (url) => {
