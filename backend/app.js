@@ -6,19 +6,30 @@ const path = require('path');
 require('dotenv').config();
 require('./config/passport');
 
-require('dotenv').config();
-
 const app = express();
 
-app.use(cors({ origin:'http://localhost:3000', credentials: true }));
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://events-frontend-bduu.onrender.com'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
+
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname,'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(session({
-  secret:process.env.SESSION_SECRET,
-  resave:false,
-  saveUninitialized:false,
-  cookie: { secure:false, httpOnly:true, sameSite:'lax' }
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, httpOnly: true, sameSite: 'lax' }
 }));
 
 app.use(passport.initialize());
@@ -31,14 +42,14 @@ app.use('/api/users', require('./routes/userRoutes'));
 
 app.get('/api/auth/me', (req, res) => {
   res.json(req.user
-    ? { isLoggedIn:true, role:req.user.role }
-    : { isLoggedIn:false });
+    ? { isLoggedIn: true, role: req.user.role }
+    : { isLoggedIn: false });
 });
 
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(err.status||500).json({ error: err.message });
+  res.status(err.status || 500).json({ error: err.message });
 });
 
-const PORT = process.env.PORT||5000;
-app.listen(PORT,()=> console.log(`Running on http://localhost:${PORT}`));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Running on http://localhost:${PORT}`));
