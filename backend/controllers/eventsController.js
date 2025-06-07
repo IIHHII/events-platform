@@ -1,7 +1,8 @@
 const { getAllEvents, getEventById, createEvent, updateEvent, deleteEvent, insertBulkEvents } = require('../models/eventsModel');
+const uploadToSupabase = require('../utils/uploadToSupabase');
 
 exports.getEvents = async (req, res) => {
-  try { 
+  try {
     const result = await getAllEvents(req.query);
     res.json(result.rows);
   } catch (err) {
@@ -20,8 +21,15 @@ exports.createEvent = async (req, res) => {
   try {
     const { title, dateTime, location, category, description } = req.body;
     if (!category?.trim()) throw new Error('Category required');
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-    const { rows } = await createEvent({ title,dateTime,location,category,description,imageUrl });
+
+    let imageUrl = null;
+
+    if (req.file) {
+      imageUrl = await uploadToSupabase(req.file.buffer, req.file.mimetype, req.file.originalname);
+      if (!imageUrl) throw new Error('Failed to upload image');
+    }
+
+    const { rows } = await createEvent({ title, dateTime, location, category, description, imageUrl });
     res.status(201).json(rows[0]);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -31,9 +39,16 @@ exports.createEvent = async (req, res) => {
 exports.updateEvent = async (req, res) => {
   try {
     const { id } = req.params;
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
     const { title, dateTime, location, category, description } = req.body;
-    const { rows } = await updateEvent(id,{ title,dateTime,location,category,description,imageUrl });
+
+    let imageUrl = null;
+
+    if (req.file) {
+      imageUrl = await uploadToSupabase(req.file.buffer, req.file.mimetype, req.file.originalname);
+      if (!imageUrl) throw new Error('Failed to upload image');
+    }
+
+    const { rows } = await updateEvent(id, { title, dateTime, location, category, description, imageUrl });
     if (!rows.length) return res.status(404).json({ error: 'Not found' });
     res.json(rows[0]);
   } catch (err) {
