@@ -1,35 +1,17 @@
 const db = require('../db');
 
-async function getAllEvents(filters = {}) {
+async function getAllEvents(filters={}) {
   const { category, location, date } = filters;
   const cond = [], vals = [];
-
-  if (category) {
-    vals.push(category);
-    cond.push(`category ILIKE $${vals.length}`);
-  }
-  if (location) {
-    vals.push(location);
-    cond.push(`location ILIKE $${vals.length}`);
-  }
-  if (date) {
-    vals.push(date);
-    cond.push(`DATE(date_time) = $${vals.length}`);
-  }
-
+  if (category) { vals.push(category); cond.push(`category ILIKE $${vals.length}`); }
+  if (location) { vals.push(location); cond.push(`location ILIKE $${vals.length}`); }
+  if (date) { vals.push(date); cond.push(`DATE(date_time) = $${vals.length}`); }
   const where = cond.length ? `WHERE ${cond.join(' AND ')}` : '';
-  
-  const query = `
-    SELECT id, title, date_time AS "dateTime",
-           location, category, description, image_url AS "imageUrl"
-    FROM events ${where} ORDER BY date_time ASC`;
-
-  console.log("Executing SQL Query:", query);
-  console.log("With Values:", vals);
-
-  return db.query(query, vals);
+  return db.query(`
+    SELECT id,title,date_time AS "dateTime",
+           location,category,description,image_url AS "imageUrl"
+    FROM events ${where} ORDER BY date_time ASC`, vals);
 }
-
 
 async function getEventById(id) {
   return db.query(
