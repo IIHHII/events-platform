@@ -2,7 +2,6 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://IIHHII.github.io/community-events-platform",
   "dependencies": {
     "axios": "^1.8.4",
     "cra-template-pwa": "2.0.0",
