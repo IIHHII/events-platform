@@ -3,12 +3,20 @@ const uploadToSupabase = require('../utils/uploadToSupabase');
 
 exports.getEvents = async (req, res) => {
   try {
+    console.log("Received GET /api/events with filters:", req.query);
+
     const result = await getAllEvents(req.query);
+
+    console.log("Events fetched successfully:", result.rows.length, "rows");
+
     res.json(result.rows);
+
   } catch (err) {
+    console.error("Error in getEvents controller:", err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.getEventById = async (req, res) => {
   const { id } = req.params;
