@@ -1,10 +1,5 @@
-const express = require('express');
-const router = express.Router();
-
-const {
-  ensureAuthenticated,
-  addEvent
-} = require('../controllers/calendarController');
+const router = require('express').Router();
+const { ensureAuthenticated, addEvent } = require('../controllers/calendarController');
 
 router.post('/add-event', ensureAuthenticated, addEvent);
 

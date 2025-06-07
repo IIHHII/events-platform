@@ -1,36 +1,21 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const multer = require('multer');
 const path = require('path');
-const {
-  getEvents,
-  getEventById,
-  createEvent,
-  updateEvent,
-  deleteEvent,
-  createBulkEvents
-} = require('../controllers/eventsController');
-
 const { ensureStaff } = require('../controllers/authController');
+const eventsRoutes = require('../controllers/eventsController');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads'));
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, `${Date.now()}${ext}`);
-  }
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, path.join(__dirname,'../uploads')),
+    filename:    (req, file, cb) => cb(null, Date.now()+path.extname(file.originalname))
+  })
 });
-const upload = multer({ storage });
 
-router.get('/', getEvents);
-router.get('/:id', getEventById);
-
-router.post('/', upload.single('image'), ensureStaff, createEvent);
-router.post('/events/bulk', createBulkEvents);
-
-router.put('/:id', upload.single('image'), ensureStaff, updateEvent);
-router.delete('/:id', ensureStaff, deleteEvent);
+router.get('/', eventsRoutes.getEvents);
+router.get('/:id', eventsRoutes.getEventById);
+router.post('/', upload.single('image'), ensureStaff, eventsRoutes.createEvent);
+router.post('/bulk', ensureStaff, eventsRoutes.createBulkEvents);
+router.put('/:id', upload.single('image'), ensureStaff, eventsRoutes.updateEvent);
+router.delete('/:id', ensureStaff, eventsRoutes.deleteEvent);
 
 module.exports = router;

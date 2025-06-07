@@ -1,13 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const {
-  handleFindOrCreateUser,
-  handleGetUserById,
-  handleUpdateUserTokens
-} = require('../controllers/userController');
+const router = require('express').Router();
+const userController = require('../controllers/userController');
 
-router.post('/', handleFindOrCreateUser);
-router.get('/:id', handleGetUserById);
-router.put('/:id/tokens', handleUpdateUserTokens);
+router.post('/', userController.handleFindOrCreateUser);
+router.get('/:id', userController.handleGetUserById);
+router.put('/:id/tokens', userController.handleUpdateUserTokens);
 
 module.exports = router;
