@@ -1,12 +1,17 @@
-const express = require('express');
-const session = require('express-session');
-const passport = require('passport');
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
-require('./config/passport');
+import express from 'express';
+import session from 'express-session';
+import passport from 'passport';
+import cors from 'cors';
+import path from 'path';
+import './config/passport';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
+
+
+app.set('trust proxy', 1);
 
 const allowedOrigins = [
   'http://localhost:3000',
@@ -40,14 +45,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(require('./routes/authRoutes'));
+
 app.use('/api/google/calendar', require('./routes/calendarRoutes'));
 app.use('/api/events', require('./routes/eventsRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 
 app.get('/api/auth/me', (req, res) => {
-  res.json(req.user
-    ? { isLoggedIn: true, role: req.user.role }
-    : { isLoggedIn: false });
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return res.json({ isLoggedIn: true, role: req.user.role });
+  }
+  return res.json({ isLoggedIn: false });
 });
 
 app.use((err, req, res, next) => {
@@ -56,4 +63,4 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
