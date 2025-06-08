@@ -8,7 +8,6 @@ const path = require('path');
 require('./config/passport.js');
 
 const app = express();
-
 app.set('trust proxy', 1);
 
 const allowedOrigins = [
@@ -17,7 +16,7 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
+  origin(origin, callback) {
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
     callback(new Error('Not allowed by CORS'));
@@ -28,18 +27,16 @@ app.use(cors({
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: true,
-      httpOnly: true,
-      sameSite: 'none',
-    },
-  })
-);
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true,
+    httpOnly: true,
+    sameSite: 'none',
+  },
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -57,7 +54,6 @@ app.get('/api/auth/me', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err);
   res.status(err.status || 500).json({ error: err.message });
 });
 
