@@ -11,14 +11,11 @@ exports.googleAuth = (req, res, next) =>
     prompt: 'consent'
   })(req, res, next);
 
-exports.googleAuthCallback = (req, res, next) =>
-  passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND_URL}/login` })(req, res, () => {
-    res.redirect(
-      req.user.role === 'staff'
-        ? `${process.env.FRONTEND_URL}/staff`
-        : `${process.env.FRONTEND_URL}/`
-    );
-  });
+  exports.googleAuthCallback = (req, res, next) =>
+    passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND_URL}/login` })(req, res, () => {
+      res.redirect(`${process.env.FRONTEND_URL}/`);
+    });
+  
 
 exports.logout = (req, res) =>
   req.logout(() => res.redirect(`${process.env.FRONTEND_URL}`));

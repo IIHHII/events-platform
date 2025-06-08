@@ -59,13 +59,15 @@ function App() {
     setUserRole(null);
   };
 
-  return loading ? (
-    <LoadingScreen />
-  ) : (
+  if (loading) return <LoadingScreen />;
+
+  return (
     <>
       <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
 
       <Routes>
+        <Route path="/staff" element={<Navigate to="/" replace />} />
+
         <Route
           path="/"
           element={
@@ -104,6 +106,7 @@ function App() {
             )
           }
         />
+
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
