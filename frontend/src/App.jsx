@@ -26,9 +26,12 @@ function App() {
 
         if (res.ok) {
           const data = await res.json();
+          console.log('Auth response data:', data);
           setIsLoggedIn(data.isLoggedIn ?? false);
           setUserRole(data.role || null);
+          console.log('Updated state -> isLoggedIn:', data.isLoggedIn, 'userRole:', data.role);
         } else {
+          console.log('Auth check failed, status not OK');
           setIsLoggedIn(false);
           setUserRole(null);
         }
@@ -53,6 +56,8 @@ function App() {
     checkAuthStatus();
     fetchEvents();
   }, []);
+
+  console.log('Render -> isLoggedIn:', isLoggedIn, 'userRole:', userRole);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
