@@ -1,54 +1,53 @@
-import express from 'express';
-import session from 'express-session';
-import passport from 'passport';
-import cors from 'cors';
-import path from 'path';
-import './config/passport';
-import dotenv from 'dotenv';
+require('dotenv').config();
+const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+const cors = require('cors');
+const path = require('path');
 
-dotenv.config();
+require('./config/passport.js');
 
 const app = express();
-
 
 app.set('trust proxy', 1);
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://events-frontend-bduu.onrender.com'
+  'https://events-frontend-bduu.onrender.com',
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
+    callback(new Error('Not allowed by CORS'));
   },
-  credentials: true
+  credentials: true,
 }));
 
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: true, 
-    httpOnly: true, 
-    sameSite: 'none', 
-  }
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'none',
+    },
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(require('./routes/authRoutes'));
-
-app.use('/api/google/calendar', require('./routes/calendarRoutes'));
-app.use('/api/events', require('./routes/eventsRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
+app.use(require('./routes/authRoutes.js'));
+app.use('/api/google/calendar', require('./routes/calendarRoutes.js'));
+app.use('/api/events', require('./routes/eventsRoutes.js'));
+app.use('/api/users', require('./routes/userRoutes.js'));
 
 app.get('/api/auth/me', (req, res) => {
   if (req.isAuthenticated && req.isAuthenticated()) {
