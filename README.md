@@ -103,7 +103,7 @@ npm start
 
 ## 🌐 Hosting
 
-This project is designed to be deployed on [Render](https://render.com):
+This project is designed to be deployed on [Render](https://events-frontend-bduu.onrender.com):
 
 * **Backend**: Deployed as a Web Service (Node.js).
 * **Frontend**: Deployed as a Static Site (React).
