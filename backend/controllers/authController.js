@@ -12,16 +12,16 @@ exports.googleAuth = (req, res, next) =>
   })(req, res, next);
 
 exports.googleAuthCallback = (req, res, next) =>
-  passport.authenticate('google', { failureRedirect: '/login' })(req, res, () => {
+  passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND_URL}/login` })(req, res, () => {
     res.redirect(
       req.user.role === 'staff'
-        ? 'http://localhost:3000/staff'
-        : 'http://localhost:3000/'
+        ? `${process.env.FRONTEND_URL}/staff`
+        : `${process.env.FRONTEND_URL}/`
     );
   });
 
 exports.logout = (req, res) =>
-  req.logout(() => res.redirect('http://localhost:3000'));
+  req.logout(() => res.redirect(`${process.env.FRONTEND_URL}`));
 
 exports.ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated && req.isAuthenticated()) return next();
